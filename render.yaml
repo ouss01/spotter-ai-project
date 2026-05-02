@@ -1,0 +1,16 @@
+# Render Blueprint: run from repo root; Django app lives in `backend/`
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: spotter-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt && python manage.py migrate --noinput
+    startCommand: gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DJANGO_DEBUG
+        value: "false"
+      # Set these in the Render dashboard (secrets / custom hostnames):
+      # DJANGO_SECRET_KEY
+      # ALLOWED_HOSTS  (e.g. spotter-api.onrender.com)
+      # CORS_ALLOWED_ORIGINS  (e.g. https://your-app.vercel.app)
